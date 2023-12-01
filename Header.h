@@ -1,160 +1,186 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
+#include <windows.h>
+#include <Windows.h>
+#include <mmsystem.h>
+#include <conio.h>
 
+//global variable for option selecton (other functions were not working, had to resort to this)
+int prime = 0;
 using namespace std;
 
-//The Node structure represents each element in the adj list
-struct node
+void menu();
+int navigateMenu(int currentOption, int totalOptions);
+
+
+//FUNCTION TO START THE GAME
+void gameLogic()
 {
-	int data; 
-	node* next;
+	cout << "STARTED";
+}
 
-};
+void displayTestMessage()
+{
+	cout << "test" << endl;
+}
 
-class Graph {
-	int vertices;
-	node** adjLists; //array of pointers where each pointer points to the head of a linked list (representing the adjacency list of a vertex)
-public:
 
-	Graph(int vertices) {
-		this->vertices = vertices;
-		adjLists = new node*[vertices];
-		for (int i = 0; i < vertices; i++) {
-			adjLists[i] = nullptr;
-		}
+//BEEP SOUND EFFECT
+void startSound()
+{
+	Beep(500, 500);
+	Sleep(500);
+	Beep(500, 550);
+	Sleep(500);
+	Beep(501, 950);
+}
 
+void setColor(int color)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void resetColor()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15); // Reset to default color
+}
+
+
+//MENU FOR ARROW KEY SELECTION
+void menuOption(int option)
+{
+	system("cls");
+
+	if (option == 1)
+	{
+		menu();
+		cout << ">START GAME" << endl;
+		cout << " RESUME GAME" << endl;
+		cout << " TEST BUTTON" << endl;
+		cout << " TEST BUTTON" << endl;
+		prime = 1;
 	}
 
-	void addEdge(int x, int y) {
-		//creating new nodes
-		node* newNode = new node;
-		newNode->data = y;
-		newNode->next = adjLists[x];
-		adjLists[x] = newNode;
-
-		newNode = new node;
-		newNode->data = x;
-		newNode->next = adjLists[y];
-		adjLists[y] = newNode;
+	if (option == 2)
+	{
+		menu();
+		cout << " START GAME" << endl;
+		cout << ">RESUME GAME" << endl;
+		cout << " TEST BUTTON" << endl;
+		cout << " TEST BUTTON" << endl;
+		prime = 2;
 	}
 
-	void printAdjList() {
-		for (int i = 0; i < vertices; i++) {
-			cout << "Vertex " << i << "->";
-			node* newNode = adjLists[i];
-			while (newNode) {
-				cout << newNode->data << " ";
-				newNode = newNode->next;
-			}
-			cout << endl;
-		}
+	if (option == 3)
+	{
+		menu();
+		cout << " START GAME" << endl;
+		cout << " RESUME GAME" << endl;
+		cout << ">TEST BUTTON" << endl;
+		cout << " TEST BUTTON" << endl;
+		prime = 3;
+	}
+	
+	if (option == 4)
+	{
+		menu();
+		cout << " START GAME" << endl;
+		cout << " RESUME GAME" << endl;
+		cout << " TEST BUTTON" << endl;
+		cout << ">TEST BUTTON" << endl;
 	}
 
-	bool isConnected(int x, int y) {
-		//to check if two nodes are connected
-		node* temp = adjLists[x];
-		while (temp != nullptr) {
-			if (temp->data == y) return true;
-			temp = temp-> next;
-		}
-		return false;
+	char key = _getch();
+
+
+	// FOR SELECTION OF OPTIONS
+	if (key == 13 && prime == 1) 
+	{
+		startSound();
+		system("cls");
+		gameLogic();
 	}
 
-	template <typename T>
-	class NewVector {
-		T* arr;
-		int capacity;
-		int size;
-	public:
-		NewVector() :capacity(10), size(0) {
-			arr = new T[capacity];
-		}
 
-		void push_back(T value) {
-			//this function doubles the capacity of the vector when it is full
-			if (size == capacity) {
-				T* newArr = new T[2 * capacity];
-				for (int i = 0; i < size; i++) {
-					newArr[i] = arr[i];
-				}
-				delete[] arr;
-				arr = newArr;
-				capacity = capacity * 2;
-			}
-			arr[size] = value;
-			size++;
-		}
-		//the operator method is to access elements
-		T& operator[](int index) {
-			/*if (index < 0 || index >= size) {
-				throw out_of_range("Index out of range");
-			}*/
-			return arr[index];
-		}
-
-		int getSize() {
-			return size;
-		}
-
-		~NewVector() {
-			delete[] arr;
-		}
-
-	};
-
-	void dijkstra(int src) {
-
-		NewVector<int> distance;
-		NewVector<bool> sptSet; //keeps track of vertices included in the shortest path tree
-		//once a vertice has been added to the sptSet it cannot be considered again
-
-		for (int i = 0; i < vertices; i++) {
-			distance.push_back(INT_MAX);
-			sptSet.push_back(false);
-		}
-		//distance from source to start is zero
-		distance[src] = 0;
-
-		for (int count = 0; count < vertices - 1; count++) {
-			int u = minDistance(distance, sptSet);
-			sptSet[u] = true;
-
-			node* temp = adjLists[u];
-			while (temp != nullptr) {
-				int v = temp->data;
-
-				//need to prevent repetition of vertices in shortest tree
-				if (!sptSet[vertices] && distance[u] != INT_MAX && distance[u] + 1 < distance[v]) {
-					distance[vertices] = distance[u] + 1;
-				}
-				temp = temp->next;
-			}
-		}
-
-		printSolution(distance, vertices);
+	if (key == 13 && prime == 2)
+	{
+		system("cls");
+		displayTestMessage();
 	}
 
-	int minDistance(NewVector<int>& distance, NewVector<bool>& sptSet) {
-		int min = INT_MAX, min_index=-1;
 
-		for (int v = 0; v < vertices; v++) {
-			if (sptSet[v] == false && distance[v] <= min) {
-				min = distance[v], min_index = v;
-			}
-		}
-		if (min_index == -1) {
-			return -1;
-		}
-		return min_index;
+	if (key == 13 && prime == 3)
+	{
+		displayTestMessage();
 	}
 
-	void printSolution(NewVector<int>& distance, int n) {
-		cout << "Vertex \t Distance from Source \n";
-		for (int i = 0; i < n; i++) {
-			cout << i << "\t\t" << distance[i] << "\n";
-		}
+
+	if (key == 13 && prime == 4)
+	{
+		displayTestMessage();
 	}
 
-};
+}
+	
+
+void menu()
+{
+	int choice = 0;
+	
+	setColor(11); // Set text color to light cyan
+	
+	
+
+	cout << "  ____             ____             _                                 " << endl;
+	cout << "/ ____| __ _ _ __ |  _ \\ __ _  ___(_)_ __   __ _                    " << endl;
+	cout << "| |   / _` | '__| | |_) / _` |/ __| | '_ \\ / _` |     ______        " << endl;
+	cout << "| |__| (_| | |    |  _ < (_| | (__| | | | | (_| |    /|_||_\\` __    " << endl;
+	cout << " \\____\\__,_|_|    |_| \\_\\__,_|\\___|_|_| |_|\\__, |   (   _    _ _||  " << endl;
+	cout << "                                           |___/    =`-(_)--(_)-'   " << endl;
+	cout << endl;
+	cout << endl;
+	cout << "==============================================================================" << endl;
+	cout << endl;
 
 
+}
+
+
+//MAIN MENU
+void mainMenu()
+{
+	int option = 1;
+	const int totalOptions = 4;
+
+	while (option != 99) {
+		menu();
+		menuOption(option);
+
+		// Get user input and update the selected option
+		option = navigateMenu(option, totalOptions);
+
+	}
+}
+
+
+
+int navigateMenu(int currentOption, int totalOptions) 
+{
+	char key = _getch(); // Get a key press without displaying it on the console
+
+	// Handle arrow key input
+	switch (key) 
+	{
+	case 72: // Up arrow key
+		return (currentOption > 1) ? currentOption - 1 : totalOptions;
+
+	case 80: // Down arrow key
+		return (currentOption < totalOptions) ? currentOption + 1 : 1;
+
+	case 13:  //enter key
+		return -1;
+		 // Signal to exit the loop
+	default:
+		return currentOption; // No change
+	}
+}
