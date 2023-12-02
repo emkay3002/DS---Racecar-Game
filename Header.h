@@ -54,7 +54,7 @@ public:
 			newNode2->next = adjLists[y];
 			adjLists[y] = newNode2;
 		}
-		
+
 	}
 
 	void printAdjList() {
@@ -251,14 +251,25 @@ public:
 		for (int i = 0; i < numberOfVertices; ++i)
 		{
 			// row index
-			cout << i << " ";
+			if (i <= 9)
+			{
+				cout << "0" << i;
+			}
+			else
+			{
+				cout << i;
+			}
 
 			for (int j = 0; j < numberOfVertices; ++j) {
-				if (myGraph.isConnected(i, j)) {
-					cout << "1 ";
+				if (myGraph.isConnected(i, j))
+				{
+					setColor(12);
+					cout << "+ ";
 				}
-				else {
-					cout << ". ";
+				else 
+				{
+					setColor(15);
+					cout << "  ";
 				}
 			}
 			cout << endl;
@@ -425,5 +436,3 @@ public:
 
 
 };
-
-
