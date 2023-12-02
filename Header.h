@@ -47,12 +47,14 @@ public:
 		newNode->next = adjLists[x];
 		adjLists[x] = newNode;
 
-
-		newNode = new node;
-		newNode->data = x;
-		newNode->type = type;
-		newNode->next = adjLists[y];
-		adjLists[y] = newNode;
+		if (isConnected(y, x)) {
+			node* newNode2 = new node;
+			newNode2->data = x;
+			newNode2->type = type;
+			newNode2->next = adjLists[y];
+			adjLists[y] = newNode2;
+		}
+		
 	}
 
 	void printAdjList() {
@@ -246,7 +248,7 @@ public:
 		}
 		cout << endl;
 
-		for (int i = 0; i < numberOfVertices; ++i) 
+		for (int i = 0; i < numberOfVertices; ++i)
 		{
 			// row index
 			cout << i << " ";
@@ -262,7 +264,6 @@ public:
 			cout << endl;
 		}
 	}
-
 
 
 
@@ -385,7 +386,7 @@ public:
 
 	void mainMenu()
 	{
-		
+
 		int option = 1;
 		const int totalOptions = 4;
 		char key = '0';
@@ -424,6 +425,5 @@ public:
 
 
 };
-
 
 
