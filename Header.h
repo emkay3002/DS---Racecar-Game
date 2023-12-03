@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <conio.h>
+#include <ctime>
 
 using namespace std;
 
@@ -39,8 +40,11 @@ public:
 
 	}
 
-	void addEdge(int x, int y, int type) {
+	void addEdge(int x, int y, int type) 
+	{
+		
 		//creating new nodes
+	  
 		node* newNode = new node;
 		newNode->data = y;
 		newNode->type = type;
@@ -237,44 +241,66 @@ public:
 	//	}
 	//}
 
+	int getConnectionType(int x, int y)
+	{
+		node* temp = adjLists[x];
+		while (temp != nullptr) 
+		{
+			if (temp->data == y)
+			{
+				return temp->type;
+			}
+			temp = temp->next;
+		}
+		return -1; // Return -1 if there is no connection
+	}
+
 	void adjacencyGrid(Graph& myGraph, int a) {
 		int numberOfVertices = a;
-		cout << "Adjacency Grid:" << endl;
 
-		//  column index
-		cout << "  ";
+		// column index
+		cout << "    ";
 		for (int col = 0; col < numberOfVertices; ++col) {
 			cout << col << " ";
 		}
 		cout << endl;
 
-		for (int i = 0; i < numberOfVertices; ++i)
-		{
+		for (int i = 0; i < numberOfVertices; ++i) {
 			// row index
-			if (i <= 9)
-			{
-				cout << "0" << i;
+			if (i <= 9) {
+				cout << "0" << i << " ";
 			}
-			else
-			{
-				cout << i;
+			else {
+				cout << i << " ";
 			}
 
 			for (int j = 0; j < numberOfVertices; ++j) {
-				if (myGraph.isConnected(i, j))
-				{
-					setColor(12);
-					cout << "+ ";
+				int type = myGraph.getConnectionType(i, j);
+				char symbol = ' ';
+
+				switch (type) {
+				case REGULAR:
+					setColor(13); // white
+					symbol = '+';
+					break;
+				case POWER_UP:
+					setColor(10); // green
+					symbol = '*';
+					break;
+				case OBSTACLE:
+					setColor(12); // red
+					symbol = '#';
+					break;
 				}
-				else 
-				{
-					setColor(15);
-					cout << "  ";
-				}
+
+				cout << symbol << " ";
 			}
 			cout << endl;
 		}
+
+		setColor(15); // Reset text color to default
 	}
+
 
 
 
