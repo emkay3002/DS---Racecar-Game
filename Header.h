@@ -241,7 +241,7 @@ public:
 	//	}
 	//}
 
-	int getConnectionType(int x, int y)
+	int getAttribute(int x, int y)
 	{
 		node* temp = adjLists[x];
 		while (temp != nullptr) 
@@ -275,12 +275,12 @@ public:
 			}
 
 			for (int j = 0; j < numberOfVertices; ++j) {
-				int type = myGraph.getConnectionType(i, j);
+				int type = myGraph.getAttribute(i, j);
 				char symbol = ' ';
 
 				switch (type) {
 				case REGULAR:
-					setColor(13); // white
+					setColor(3); // purple
 					symbol = '+';
 					break;
 				case POWER_UP:
@@ -288,7 +288,7 @@ public:
 					symbol = '*';
 					break;
 				case OBSTACLE:
-					setColor(12); // red
+					setColor(4); // red
 					symbol = '#';
 					break;
 				}
@@ -298,7 +298,7 @@ public:
 			cout << endl;
 		}
 
-		setColor(15); // Reset text color to default
+		setColor(15); // white
 	}
 
 
@@ -345,32 +345,32 @@ public:
 			cout << "\
 >START GAME\n\
  RESUME GAME\n\
- TEST BUTTON\n\
- TEST BUTTON\n";
+ EXIT\n\
+ HIGH SCORES\n";
 			prime = 1;
 			break;
 		case 2:
 			cout << "\
  START GAME\n\
 >RESUME GAME\n\
- TEST BUTTON\n\
- TEST BUTTON\n";
+ EXIT\n\
+ HIGH SCORES\n";
 			prime = 2;
 			break;
 		case 3:
 			cout << "\
  START GAME\n\
  RESUME GAME\n\
->TEST BUTTON\n\
- TEST BUTTON\n";
+>EXIT\n\
+ HIGH SCORES\n";
 			prime = 3;
 			break;
 		case 4:
 			cout << "\
  START GAME\n\
  RESUME GAME\n\
- TEST BUTTON\n\
->TEST BUTTON\n";
+ EXIT\n\
+>HIGH SCORES\n";
 			prime = 4;
 			break;
 		}
@@ -411,6 +411,8 @@ public:
 	{
 		system("cls");
 		int choice = 0;
+
+		setColor(13);
 		cout << "\
   ____             ____             _                                 \n\
 / ____| __ _ _ __ |  _ \\ __ _  ___(_)_ __   __ _                    \n\
@@ -460,5 +462,57 @@ public:
 		}
 	}
 
+
+};
+
+
+struct Queue
+{
+	int front, rear, capacity;
+	int* queue;
+
+	Queue(int capacity)
+	{
+		front = rear = 0;
+		this->capacity = capacity;
+
+		queue = new int[capacity];
+	}
+
+	~Queue()
+	{
+		delete[] queue;
+	}
+
+	void enqueue(int data)
+	{
+		if (capacity == rear)
+		{
+			std::cout << "Queue is full." << std::endl;
+			return;
+		}
+		else {
+			queue[rear] = data;
+			rear++;
+		}
+	}
+	int dequeue()
+	{
+		if (front == rear)
+		{
+			std::cout << "Queue is empty." << std::endl;
+			return -1; // Assuming -1 is an invalid value
+		}
+
+		int dequeuedValue = queue[front];
+		for (int i = 0; i < rear - 1; i++) {
+			queue[i] = queue[i + 1];
+		}
+
+		// decrement rear
+		rear--;
+
+		return dequeuedValue;
+	}
 
 };
