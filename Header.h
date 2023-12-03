@@ -466,7 +466,7 @@ public:
 };
 
 
-struct Queue
+struct Queue    //FOR OBSTACLES
 {
 	int front, rear, capacity;
 	int* queue;
@@ -475,7 +475,6 @@ struct Queue
 	{
 		front = rear = 0;
 		this->capacity = capacity;
-
 		queue = new int[capacity];
 	}
 
@@ -488,31 +487,36 @@ struct Queue
 	{
 		if (capacity == rear)
 		{
-			std::cout << "Queue is full." << std::endl;
+			cout << "Queue is full!" << std::endl;
 			return;
 		}
-		else {
+
+		else 
+		{
 			queue[rear] = data;
 			rear++;
 		}
 	}
+
 	int dequeue()
 	{
 		if (front == rear)
 		{
-			std::cout << "Queue is empty." << std::endl;
-			return -1; // Assuming -1 is an invalid value
+			cout << "Queue is empty!" << std::endl;
+			return -1; 
 		}
 
 		int dequeuedValue = queue[front];
-		for (int i = 0; i < rear - 1; i++) {
+
+		for (int i = 0; i < rear - 1; i++)
+		{
 			queue[i] = queue[i + 1];
 		}
 
-		// decrement rear
+		
 		rear--;
 
-		return dequeuedValue;
+		return dequeuedValue;    // This value will be used to initialize the node as obstacle/powerup etc
 	}
 
 };
