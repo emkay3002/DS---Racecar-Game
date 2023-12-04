@@ -24,14 +24,25 @@ struct node
 	int type; //0: regular, 1: power up, 2: obstacle
 };
 
+class Car {
+public:
+	char symbol;
+	int x, y;
+	Car() {};
+	Car(char sybmol, int x, int y): symbol(symbol), x(x), y(y) {}
+
+};
+
 class Graph
 {
 	int vertices;
 	node** adjLists; //array of pointers where each pointer points to the head of a linked list (representing the adjacency list of a vertex)
 public:
-
+	Car car;
+	Graph() {}
 	Graph(int vertices)
 	{
+		car = Car('C', 0, 0);
 		this->vertices = vertices;
 		adjLists = new node * [vertices];
 		for (int i = 0; i < vertices; i++) {
@@ -40,11 +51,11 @@ public:
 
 	}
 
-	void addEdge(int x, int y, int type) 
+	void addEdge(int x, int y, int type)
 	{
-		
+
 		//creating new nodes
-	  
+
 		node* newNode = new node;
 		newNode->data = y;
 		newNode->type = type;
@@ -199,31 +210,67 @@ public:
 
 	void printMaze()
 	{
+		//for (int i = 0; i < vertices; i++)
+		//{
+		//	cout << i;
+		//	node* newNode = adjLists[i];
+
+		//	while (newNode)
+		//	{
+		//		if (newNode->type == REGULAR)
+		//		{
+		//			cout << " --- " << newNode->data;
+		//		}
+		//		else if (newNode->type == POWER_UP)
+		//		{
+		//			cout << "+++" << newNode->data;
+		//		}
+		//		else
+		//		{
+		//			cout << "###" << newNode->data;
+		//		}
+
+		//		//check current node against car pos
+		//		if (car.x == i && car.y == j) {
+		//			cout << car.symbol;
+		//		}
+
+		//		newNode = newNode->next;  // Move to the next node
+		//	}
+
+		//	cout << endl;
+		//}
+
 		for (int i = 0; i < vertices; i++)
 		{
-			cout << i;
-			node* newNode = adjLists[i];
-
-			while (newNode)
+			for (int j = 0; j < vertices; j++)
 			{
-				if (newNode->type == REGULAR)
-				{
-					cout << " --- " << newNode->data;
+				if (i == car.x && j == car.y) {
+					setColor(14);//red
+					cout << "C";
 				}
-				else if (newNode->type == POWER_UP)
-				{
-					cout << "+++" << newNode->data;
-				}
-				else
-				{
-					cout << "###" << newNode->data;
-				}
+				else if (getAttribute(i, j) == REGULAR) {
+					setColor(15);//white
 
-				newNode = newNode->next;  // Move to the next node
+					cout << "+";
+				}
+				else if (getAttribute(i, j) == POWER_UP) {
+					setColor(10); //green
+					cout << "*";
+				}
+				else if (getAttribute(i, j) == OBSTACLE) {
+					setColor(4);//red
+					cout << "#";
+				}
+				else {
+					setColor(15);//white
+					cout << " ";
+				}
 			}
-
 			cout << endl;
 		}
+
+		resetColor();
 	}
 
 	//void printAdjacencyGrid(node** adjLists, int numberOfVertices) {
@@ -244,7 +291,7 @@ public:
 	int getAttribute(int x, int y)
 	{
 		node* temp = adjLists[x];
-		while (temp != nullptr) 
+		while (temp != nullptr)
 		{
 			if (temp->data == y)
 			{
@@ -297,7 +344,7 @@ public:
 			}
 			cout << endl;
 		}
-
+		
 		setColor(15); // white
 	}
 
@@ -462,7 +509,48 @@ public:
 		}
 	}
 
+	void moveCar(char dir) {
+		int nextX = car.x;
+		int nextY = car.y;
 
+		if (dir == 'a') {
+			//one step left (using awds)
+			nextX = nextX - 1;
+
+		}
+		else if (dir == 'd') {
+			//one step right (using awds)
+			nextX = nextX + 1;
+		}
+		else if (dir == 'w') {
+			//one step up (using awds)
+			nextY = nextY - 1;
+		}
+		else if (dir == 's') {
+			//one step down (using awds)
+			nextY = nextY + 1;
+		}
+		if (nextX>=0 && nextX<vertices && nextY>=0 && nextY<vertices && getAttribute(nextX,nextY)!=	OBSTACLE) {
+			car.x = nextX;
+			car.y = nextY;
+		}
+			
+		
+	}
+
+	void printCar() {
+		cout << "Car's position: (" << car.x << ", " << car.y << ")" << endl;
+	}
+	
+	void gameLoop() {
+		while (true) {
+			char key = _getch();
+			if (key == 'a' || key == 'd' || key == 'w' || key == 's') {
+				moveCar(key);
+				printMaze();
+			}
+		}
+	}
 };
 
 
@@ -491,7 +579,7 @@ struct Queue    //FOR OBSTACLES
 			return;
 		}
 
-		else 
+		else
 		{
 			queue[rear] = data;
 			rear++;
@@ -503,7 +591,7 @@ struct Queue    //FOR OBSTACLES
 		if (front == rear)
 		{
 			cout << "Queue is empty!" << std::endl;
-			return -1; 
+			return -1;
 		}
 
 		int dequeuedValue = queue[front];
@@ -513,7 +601,7 @@ struct Queue    //FOR OBSTACLES
 			queue[i] = queue[i + 1];
 		}
 
-		
+
 		rear--;
 
 		return dequeuedValue;    // This value will be used to initialize the node as obstacle/powerup etc
