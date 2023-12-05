@@ -1,3 +1,6 @@
+//Eman_Khalid_22i2409.
+//Abdullah_Jillani_22i2417.
+
 #pragma once
 #include <iostream>
 #include <windows.h>
@@ -35,9 +38,60 @@ public:
 	Car(char sybmol, int x, int y) : symbol(symbol), x(x), y(y) {}
 
 };
+template <typename T>
+class NewVector {
+	T* arr;
+	int capacity;
+	int size;
+public:
+	NewVector() :capacity(10), size(0) {
+		arr = new T[capacity];
+	}
+
+	void push_back(T value) {
+		//this function doubles the capacity of the vector when it is full
+		if (size == capacity) {
+			T* newArr = new T[2 * capacity];
+			for (int i = 0; i < size; i++) {
+				newArr[i] = arr[i];
+			}
+			delete[] arr;
+			arr = newArr;
+			capacity = capacity * 2;
+		}
+		arr[size] = value;
+		size++;
+	}
+	//the operator method is to access elements
+	T& operator[](int index) {
+		/*if (index < 0 || index >= size) {
+			throw out_of_range("Index out of range");
+		}*/
+		return arr[index];
+	}
+
+	T* start_begin() {
+		return arr;
+	}
+
+	T* end() {
+		return arr + size;
+	}
+
+	int getSize() {
+		return size;
+	}
+
+	~NewVector() {
+		delete[] arr;
+	}
+
+};
 
 class Graph
 {
+	bool isAutomatic;
+	NewVector<int> Automatic;
 	int vertices;
 	node** adjLists; //array of pointers where each pointer points to the head of a linked list (representing the adjacency list of a vertex)
 public:
@@ -90,7 +144,8 @@ public:
 	bool isConnected(int x, int y)
 	{
 		//to check if two nodes are connected
-		node* temp = adjLists[x];
+		node* temp;
+		temp= adjLists[x];
 		while (temp != nullptr) {
 			if (temp->data == y) return true;
 			temp = temp->next;
@@ -98,65 +153,36 @@ public:
 		return false;
 	}
 
-	template <typename T>
-	class NewVector {
-		T* arr;
-		int capacity;
-		int size;
-	public:
-		NewVector() :capacity(10), size(0) {
-			arr = new T[capacity];
-		}
+	
 
-		void push_back(T value) {
-			//this function doubles the capacity of the vector when it is full
-			if (size == capacity) {
-				T* newArr = new T[2 * capacity];
-				for (int i = 0; i < size; i++) {
-					newArr[i] = arr[i];
-				}
-				delete[] arr;
-				arr = newArr;
-				capacity = capacity * 2;
-			}
-			arr[size] = value;
-			size++;
-		}
-		//the operator method is to access elements
-		T& operator[](int index) {
-			/*if (index < 0 || index >= size) {
-				throw out_of_range("Index out of range");
-			}*/
-			return arr[index];
-		}
-
-		int getSize() {
-			return size;
-		}
-
-		~NewVector() {
-			delete[] arr;
-		}
-
-	};
-
-	void dijkstra(int src)
+	void dijkstra(int src, int& endP)
 	{
-
+		//creating vectors manually instead of using libraries
 		NewVector<int> distance;
-		NewVector<bool> sptSet; //keeps track of vertices included in the shortest path tree
-		//once a vertice has been added to the sptSet it cannot be considered again
+		NewVector<bool> shortestPath; //keeps track of vertices included in the shortest path tree
+		//once a vertice has been added to the shortest path it cannot be considered again
+
+		//to find shortest path for automode
+		NewVector<int> initialMap;
+		
+		NewVector<int>path;
+		for (int i = endP; i != src; i = initialMap[i]) {
+			path.push_back(i);
+		}
+		path.push_back(src);
+		this->Automatic = path;
 
 		for (int i = 0; i < vertices; i++) {
 			distance.push_back(INT_MAX);
-			sptSet.push_back(false);
+			initialMap.push_back(-1);
+			shortestPath.push_back(false);
 		}
 		//distance from source to start is zero
 		distance[src] = 0;
 
 		for (int count = 0; count < vertices - 1; count++) {
-			int u = minDistance(distance, sptSet);
-			sptSet[u] = true;
+			int u = minDistance(distance, shortestPath);
+			shortestPath[u] = true;
 
 			node* temp = adjLists[u];
 			while (temp != nullptr) {
@@ -171,17 +197,17 @@ public:
 					distance[v] = distance[u] + 1 + 2;//plus 2 for power up
 
 				}
+				else if(temp->type==9) {
+					//this condition is to check whether the car has reached the end of the map, the game is terminated then
+					return;
+				}
 				else {
 					distance[v] = distance[u] + 1;
+					initialMap[v] = u;
 				}
 
-
-
-
-				////need to prevent repetition of vertices in shortest tree
-				//if (!sptSet[vertices] && distance[u] != INT_MAX && distance[u] + 1 < distance[v]) {
-				//	distance[vertices] = distance[u] + 1;
-				//}
+				//need to prevent repetition of vertices in shortest tree
+				
 				temp = temp->next;
 			}
 		}
@@ -189,11 +215,11 @@ public:
 		printSolution(distance, vertices);
 	}
 
-	int minDistance(NewVector<int>& distance, NewVector<bool>& sptSet) {
+	int minDistance(NewVector<int>& distance, NewVector<bool>& shortestPath) {
 		int min = INT_MAX, min_index = -1;
 
 		for (int v = 0; v < vertices; v++) {
-			if (sptSet[v] == false && distance[v] <= min) {
+			if (shortestPath[v] == false && distance[v] <= min) {
 				min = distance[v], min_index = v;
 			}
 		}
@@ -205,16 +231,18 @@ public:
 
 	void printSolution(NewVector<int>& distance, int n)
 	{
-		cout << "Vertex \t Distance from Source \n";
+		cout << "Vertex      Distance from Source "<<endl;
 		for (int i = 0; i < n; i++)
 		{
-			cout << i << "\t\t" << distance[i] << "\n";
+			cout << i << "        " << distance[i] << endl;
 		}
 	}
 
 
+
 	void printMaze()
 	{
+		
 		for (int i = 0; i < vertices; i++)
 		{
 			for (int j = 0; j < vertices; j++)
@@ -236,6 +264,7 @@ public:
 					setColor(4);//red
 					cout << "# ";
 				}
+				
 				else {
 					setColor(15);//white
 					cout << ". ";
@@ -367,7 +396,7 @@ public:
 		case 1:
 			cout << "\
                      >START GAME\n\
-                      RESUME GAME\n\
+                      AUTOMODE\n\
                       EXIT\n\
                       HIGH SCORES\n";
 			prime = 1;
@@ -375,7 +404,7 @@ public:
 		case 2:
 			cout << "\
                       START GAME\n\
-                     >RESUME GAME\n\
+                     >AUTOMODE\n\
                       EXIT\n\
                       HIGH SCORES\n";
 			prime = 2;
@@ -383,7 +412,7 @@ public:
 		case 3:
 			cout << "\
                       START GAME\n\
-                      RESUME GAME\n\
+                      AUTOMODE\n\
                      >EXIT\n\
                       HIGH SCORES\n";
 			prime = 3;
@@ -391,7 +420,7 @@ public:
 		case 4:
 			cout << "\
                       START GAME\n\
-                      RESUME GAME\n\
+                      AUTOMODE\n\
                       EXIT\n\
                      >HIGH SCORES\n";
 			prime = 4;
@@ -413,6 +442,8 @@ public:
 		if (key == 13 && prime == 2)
 		{
 			system("cls");
+			bool isAutomatic = true;
+			gameLoop();
 		}
 
 
@@ -483,7 +514,7 @@ public:
 		}
 	}
 
-	void moveCar(char dir) 
+	void moveCar(char dir)
 	{
 		system("cls");
 		int nextX = car.x;
@@ -506,17 +537,17 @@ public:
 			//one step down (using awds)
 			nextY = nextY + 1;
 		}
-		if (nextX >= 0 && nextX < vertices && nextY >= 0 && nextY < vertices && isConnected(nextX,nextY))
+		if (nextX >= 0 && nextX < vertices && nextY >= 0 && nextY < vertices && isConnected(nextX, nextY))
 		{
-			
+
 			int type = getAttribute(nextX, nextY);
 
 			// Update the score based on the type of the next node
-			if (type == REGULAR) 
+			if (type == REGULAR)
 			{
 				score += 0.5;
 			}
-			else if (type == POWER_UP) 
+			else if (type == POWER_UP)
 			{
 				score += 2;
 			}
@@ -527,7 +558,7 @@ public:
 
 			if (type == end1)
 			{
-				
+
 			}
 
 			car.x = nextX;
@@ -542,7 +573,7 @@ public:
 	}
 
 
-	void gameLoop() 
+	void gameLoop()
 	{
 		while (true)
 		{
