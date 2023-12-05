@@ -4,6 +4,7 @@
 #include <mmsystem.h>
 #include <conio.h>
 #include <ctime>
+#include <thread>
 
 using namespace std;
 
@@ -555,7 +556,7 @@ public:
 				int currentNodeType = getAttribute(car.x, car.y);
 				if (currentNodeType == end1) {
 					// End the game loop if the last node is reached
-					cout << "EFWEFWEFWEFWEFW";
+					cout << "GAME OVER!!";
 					break;
 				}
 			}
