@@ -1,5 +1,6 @@
+
 //Eman_Khalid_22i2409.
-//Abdullah_Jillani_22i2417.
+//Abdullah_Jilani_22i2417.
 
 #pragma once
 #include <iostream>
@@ -8,6 +9,8 @@
 #include <conio.h>
 #include <ctime>
 #include <thread>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -16,10 +19,104 @@ const int REGULAR = 0;
 const int POWER_UP = 1;
 const int OBSTACLE = 2;
 int prime = 0;
-double score = 0;
-void menu();
-int navigateMenu(int currentOption, int totalOptions);
+float score = 0;
 
+class tree
+{
+public:
+	double data;
+	tree* left;
+	tree* right;
+	tree* root;
+
+	tree() {};
+
+	tree(int val)
+	{
+		data = val;
+		left = nullptr;
+		right = nullptr;
+	}
+
+	void insertNode(int num)
+	{
+		tree* newNode, * nodePtr;
+		newNode = new tree;
+		newNode->data = num;
+		newNode->left = newNode->right = NULL;
+
+		if (!root) root = newNode;
+
+		else
+		{
+			nodePtr = root;
+			while (nodePtr != NULL)
+			{
+				if (num < nodePtr->data) //traversing through left subtree
+				{
+					if (nodePtr->left)
+					{
+						nodePtr = nodePtr->left;
+					}
+					else
+					{
+						nodePtr->left = newNode;
+						break;
+					}
+				}
+
+				else if (num > nodePtr->data) //traversing through right subtree
+				{
+					if (nodePtr->right) nodePtr = nodePtr->right;
+
+					else
+					{
+						nodePtr->right = newNode;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	void displayInOrder(tree* nodePtr)
+	{
+		if (nodePtr)
+		{
+			displayInOrder(nodePtr->left);
+			cout << nodePtr->data <<endl;
+			displayInOrder(nodePtr->right);
+		}
+	}
+
+	void display()
+	{
+		//cout << "In-order traversal: ";
+		displayInOrder(root);
+		cout << endl;
+	}
+
+	void reasing(string filename)
+	{
+		ifstream read(filename);
+
+		if (read.is_open())
+		{
+			string line;
+
+			while (getline(read, line))
+			{
+				float score1 = stof(line);
+				insertNode(score1);
+			}
+			read.close();
+		}
+		else
+		{
+			cout << "FILE NOT OPENED!" << endl;
+		}
+	}
+};
 
 
 //The Node structure represents each element in the adj list
@@ -145,7 +242,7 @@ public:
 	{
 		//to check if two nodes are connected
 		node* temp;
-		temp= adjLists[x];
+		temp = adjLists[x];
 		while (temp != nullptr) {
 			if (temp->data == y) return true;
 			temp = temp->next;
@@ -153,7 +250,7 @@ public:
 		return false;
 	}
 
-	
+
 
 	void dijkstra(int src, int& endP)
 	{
@@ -164,7 +261,7 @@ public:
 
 		//to find shortest path for automode
 		NewVector<int> initialMap;
-		
+
 		NewVector<int>path;
 		for (int i = endP; i != src; i = initialMap[i]) {
 			path.push_back(i);
@@ -197,7 +294,7 @@ public:
 					distance[v] = distance[u] + 1 + 2;//plus 2 for power up
 
 				}
-				else if(temp->type==9) {
+				else if (temp->type == 9) {
 					//this condition is to check whether the car has reached the end of the map, the game is terminated then
 					return;
 				}
@@ -207,7 +304,7 @@ public:
 				}
 
 				//need to prevent repetition of vertices in shortest tree
-				
+
 				temp = temp->next;
 			}
 		}
@@ -231,7 +328,7 @@ public:
 
 	void printSolution(NewVector<int>& distance, int n)
 	{
-		cout << "Vertex      Distance from Source "<<endl;
+		cout << "Vertex      Distance from Source " << endl;
 		for (int i = 0; i < n; i++)
 		{
 			cout << i << "        " << distance[i] << endl;
@@ -242,7 +339,7 @@ public:
 
 	void printMaze()
 	{
-		
+
 		for (int i = 0; i < vertices; i++)
 		{
 			for (int j = 0; j < vertices; j++)
@@ -264,7 +361,7 @@ public:
 					setColor(4);//red
 					cout << "# ";
 				}
-				
+
 				else {
 					setColor(15);//white
 					cout << ". ";
@@ -384,9 +481,6 @@ public:
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15); // Reset to default color
 	}
 
-
-
-
 	void menuOption(int option)
 	{
 		prime = option;
@@ -395,34 +489,34 @@ public:
 		{
 		case 1:
 			cout << "\
-                     >START GAME\n\
-                      AUTOMODE\n\
-                      EXIT\n\
-                      HIGH SCORES\n";
+                         >START GAME\n\
+                          AUTO MODE\n\
+                          HIGH SCORES\n\
+                          EXIT\n";
 			prime = 1;
 			break;
 		case 2:
 			cout << "\
-                      START GAME\n\
-                     >AUTOMODE\n\
-                      EXIT\n\
-                      HIGH SCORES\n";
+                          START GAME\n\
+                         >AUTO MODE\n\
+                          HIGH SCORES\n\
+                          EXIT\n";
 			prime = 2;
 			break;
 		case 3:
 			cout << "\
-                      START GAME\n\
-                      AUTOMODE\n\
-                     >EXIT\n\
-                      HIGH SCORES\n";
+                          START GAME\n\
+                          AUTO MODE\n\
+                         >HIGH SCORES\n\
+                          EXIT\n";
 			prime = 3;
 			break;
 		case 4:
 			cout << "\
-                      START GAME\n\
-                      AUTOMODE\n\
-                      EXIT\n\
-                     >HIGH SCORES\n";
+                          START GAME\n\
+                          AUTO MODE\n\
+                          HIGH SCORES\n\
+                         >EXIT\n";
 			prime = 4;
 			break;
 		}
@@ -434,7 +528,9 @@ public:
 		// FOR SELECTION OF OPTIONS
 		if (key == 13 && prime == 1)
 		{
+			
 			system("cls");
+			startSound();
 			gameLoop();
 		}
 
@@ -449,13 +545,17 @@ public:
 
 		if (key == 13 && prime == 3)
 		{
-			//displayTestMessage();
+			system("cls");
+			tree t;
+			t.reasing("scores.txt");
+			t.display();
+
 		}
 
 
 		if (key == 13 && prime == 4)
 		{
-			//displayTestMessage();
+
 		}
 	}
 
@@ -464,15 +564,20 @@ public:
 		system("cls");
 		int choice = 0;
 
-		setColor(13);
+		setColor(15);
+		cout << "=========================================================================" << endl << endl;
+		setColor(3);
 		cout << "\
   ____             ____             _                                 \n\
 / ____| __ _ _ __ |  _ \\ __ _  ___(_)_ __   __ _                    \n\
 | |   / _` | '__| | |_) / _` |/ __| | '_ \\ / _` |     ______        \n\
 | |__| (_| | |    |  _ < (_| | (__| | | | | (_| |    /|_||_\\` __    \n\
  \\____\\__,_|_|    |_| \\_\\__,_|\\___|_|_| |_|\\__, |   (   _    _ _||  \n\
-                                           |___/    =`-(_)--(_)-'   \n\n\n\
-==============================================================================\n\n";
+                                           |___/    =`-(_)--(_)-'   \n\n";
+
+		setColor(15);
+		cout << "=========================================================================" << endl << endl;
+		setColor(3);
 	}
 
 	void mainMenu()
@@ -553,7 +658,7 @@ public:
 			}
 			else if (type == OBSTACLE)
 			{
-				score -= 5;
+				score -= 3;
 			}
 
 			if (type == end1)
@@ -568,7 +673,8 @@ public:
 
 	}
 
-	void printCar() {
+	void printCar()
+	{
 		cout << "Car's position: (" << car.x << ", " << car.y << ")" << endl;
 	}
 
@@ -577,7 +683,9 @@ public:
 	{
 		while (true)
 		{
+			system("cls");
 			printMaze();
+
 			char key = _getch();
 			if (key == 'a' || key == 'd' || key == 'w' || key == 's')
 			{
@@ -588,6 +696,17 @@ public:
 				if (currentNodeType == end1) {
 					// End the game loop if the last node is reached
 					cout << "GAME OVER!!";
+					ofstream write("scores.txt", ios::app);
+					if (write.is_open())
+					{
+						write << score << endl;
+						write.close();
+					}
+
+					else
+					{
+						cout << "FILE NOT FOUND!" << endl;
+					}
 					break;
 				}
 			}
