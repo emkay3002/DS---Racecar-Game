@@ -7,10 +7,12 @@
 
 using namespace std;
 
+int end1 = 9;
 const int REGULAR = 0;
 const int POWER_UP = 1;
 const int OBSTACLE = 2;
 int prime = 0;
+double score = 0;
 void menu();
 int navigateMenu(int currentOption, int totalOptions);
 
@@ -29,7 +31,7 @@ public:
 	char symbol;
 	int x, y;
 	Car() {};
-	Car(char sybmol, int x, int y): symbol(symbol), x(x), y(y) {}
+	Car(char sybmol, int x, int y) : symbol(symbol), x(x), y(y) {}
 
 };
 
@@ -69,7 +71,6 @@ public:
 			newNode2->next = adjLists[y];
 			adjLists[y] = newNode2;
 		}
-
 	}
 
 	void printAdjList() {
@@ -85,7 +86,8 @@ public:
 		}
 	}
 
-	bool isConnected(int x, int y) {
+	bool isConnected(int x, int y)
+	{
 		//to check if two nodes are connected
 		node* temp = adjLists[x];
 		while (temp != nullptr) {
@@ -137,7 +139,8 @@ public:
 
 	};
 
-	void dijkstra(int src) {
+	void dijkstra(int src)
+	{
 
 		NewVector<int> distance;
 		NewVector<bool> sptSet; //keeps track of vertices included in the shortest path tree
@@ -208,68 +211,40 @@ public:
 		}
 	}
 
+
 	void printMaze()
 	{
-		//for (int i = 0; i < vertices; i++)
-		//{
-		//	cout << i;
-		//	node* newNode = adjLists[i];
-
-		//	while (newNode)
-		//	{
-		//		if (newNode->type == REGULAR)
-		//		{
-		//			cout << " --- " << newNode->data;
-		//		}
-		//		else if (newNode->type == POWER_UP)
-		//		{
-		//			cout << "+++" << newNode->data;
-		//		}
-		//		else
-		//		{
-		//			cout << "###" << newNode->data;
-		//		}
-
-		//		//check current node against car pos
-		//		if (car.x == i && car.y == j) {
-		//			cout << car.symbol;
-		//		}
-
-		//		newNode = newNode->next;  // Move to the next node
-		//	}
-
-		//	cout << endl;
-		//}
-
 		for (int i = 0; i < vertices; i++)
 		{
 			for (int j = 0; j < vertices; j++)
 			{
 				if (i == car.x && j == car.y) {
 					setColor(14);//red
-					cout << "C";
+					cout << "C ";
 				}
 				else if (getAttribute(i, j) == REGULAR) {
 					setColor(15);//white
 
-					cout << "+";
+					cout << ". ";
 				}
 				else if (getAttribute(i, j) == POWER_UP) {
 					setColor(10); //green
-					cout << "*";
+					cout << "* ";
 				}
 				else if (getAttribute(i, j) == OBSTACLE) {
 					setColor(4);//red
-					cout << "#";
+					cout << "# ";
 				}
 				else {
 					setColor(15);//white
-					cout << " ";
+					cout << ". ";
 				}
 			}
 			cout << endl;
 		}
 
+		setColor(12);
+		cout << "SCORE: " << score;
 		resetColor();
 	}
 
@@ -344,7 +319,7 @@ public:
 			}
 			cout << endl;
 		}
-		
+
 		setColor(15); // white
 	}
 
@@ -390,34 +365,34 @@ public:
 		{
 		case 1:
 			cout << "\
->START GAME\n\
- RESUME GAME\n\
- EXIT\n\
- HIGH SCORES\n";
+                     >START GAME\n\
+                      RESUME GAME\n\
+                      EXIT\n\
+                      HIGH SCORES\n";
 			prime = 1;
 			break;
 		case 2:
 			cout << "\
- START GAME\n\
->RESUME GAME\n\
- EXIT\n\
- HIGH SCORES\n";
+                      START GAME\n\
+                     >RESUME GAME\n\
+                      EXIT\n\
+                      HIGH SCORES\n";
 			prime = 2;
 			break;
 		case 3:
 			cout << "\
- START GAME\n\
- RESUME GAME\n\
->EXIT\n\
- HIGH SCORES\n";
+                      START GAME\n\
+                      RESUME GAME\n\
+                     >EXIT\n\
+                      HIGH SCORES\n";
 			prime = 3;
 			break;
 		case 4:
 			cout << "\
- START GAME\n\
- RESUME GAME\n\
- EXIT\n\
->HIGH SCORES\n";
+                      START GAME\n\
+                      RESUME GAME\n\
+                      EXIT\n\
+                     >HIGH SCORES\n";
 			prime = 4;
 			break;
 		}
@@ -429,10 +404,8 @@ public:
 		// FOR SELECTION OF OPTIONS
 		if (key == 13 && prime == 1)
 		{
-			startSound();
 			system("cls");
-			printMaze();
-
+			gameLoop();
 		}
 
 
@@ -509,48 +482,97 @@ public:
 		}
 	}
 
-	void moveCar(char dir) {
+	void moveCar(char dir) 
+	{
+		system("cls");
 		int nextX = car.x;
 		int nextY = car.y;
 
-		if (dir == 'a') {
+		if (dir == 'w') {
 			//one step left (using awds)
 			nextX = nextX - 1;
 
 		}
-		else if (dir == 'd') {
+		else if (dir == 's') {
 			//one step right (using awds)
 			nextX = nextX + 1;
 		}
-		else if (dir == 'w') {
+		else if (dir == 'a') {
 			//one step up (using awds)
 			nextY = nextY - 1;
 		}
-		else if (dir == 's') {
+		else if (dir == 'd') {
 			//one step down (using awds)
 			nextY = nextY + 1;
 		}
-		if (nextX>=0 && nextX<vertices && nextY>=0 && nextY<vertices && getAttribute(nextX,nextY)!=	OBSTACLE) {
+		if (nextX >= 0 && nextX < vertices && nextY >= 0 && nextY < vertices && isConnected(nextX,nextY))
+		{
+			
+			int type = getAttribute(nextX, nextY);
+
+			// Update the score based on the type of the next node
+			if (type == REGULAR) 
+			{
+				score += 0.5;
+			}
+			else if (type == POWER_UP) 
+			{
+				score += 2;
+			}
+			else if (type == OBSTACLE)
+			{
+				score -= 5;
+			}
+
+			if (type == end1)
+			{
+				
+			}
+
 			car.x = nextX;
 			car.y = nextY;
 		}
-			
-		
+
+
 	}
 
 	void printCar() {
 		cout << "Car's position: (" << car.x << ", " << car.y << ")" << endl;
 	}
-	
-	void gameLoop() {
-		while (true) {
+
+
+	void gameLoop() 
+	{
+		while (true)
+		{
+			printMaze();
 			char key = _getch();
-			if (key == 'a' || key == 'd' || key == 'w' || key == 's') {
+			if (key == 'a' || key == 'd' || key == 'w' || key == 's')
+			{
 				moveCar(key);
-				printMaze();
+
+				// Check if the car is on the node with the type "End"
+				int currentNodeType = getAttribute(car.x, car.y);
+				if (currentNodeType == end1) {
+					// End the game loop if the last node is reached
+					cout << "EFWEFWEFWEFWEFW";
+					break;
+				}
 			}
 		}
 	}
+
+	/*void gameLoop() {
+		while (true) {
+			char key = _getch();
+			if (key == 'a' || key == 'd' || key == 'w' || key == 's')
+			{
+				moveCar(key);
+
+				printMaze();
+			}
+		}
+	}*/
 };
 
 
@@ -575,7 +597,6 @@ struct Queue    //FOR OBSTACLES
 	{
 		if (capacity == rear)
 		{
-			cout << "Queue is full!" << std::endl;
 			return;
 		}
 
@@ -590,7 +611,6 @@ struct Queue    //FOR OBSTACLES
 	{
 		if (front == rear)
 		{
-			cout << "Queue is empty!" << std::endl;
 			return -1;
 		}
 
@@ -600,8 +620,6 @@ struct Queue    //FOR OBSTACLES
 		{
 			queue[i] = queue[i + 1];
 		}
-
-
 		rear--;
 
 		return dequeuedValue;    // This value will be used to initialize the node as obstacle/powerup etc

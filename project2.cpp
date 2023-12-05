@@ -4,7 +4,7 @@
 using namespace std;
 
 
-int main() 
+int main()
 {
     const int numberOfVertices = 20;
     Graph maze(numberOfVertices);
@@ -12,7 +12,7 @@ int main()
 
     // FOR RANDOMIZING OBSTACLES, POWERUPS AND REGULAR NODES, REPLACE THE THIRD 
     // PARAMETER WITH "type1" TO USE
-    
+
     //srand(time(0));
     //type1 = rand()%3;
 
@@ -23,24 +23,24 @@ int main()
     int numberOfEnqueues = 30;
     Queue myQueue(31); // Adjust the capacity as needed
 
-    for (int i = 0; i < numberOfEnqueues; ++i) 
+    for (int i = 0; i < numberOfEnqueues; ++i)
     {
         int randomNumber = rand() % 3; // Generates a random number between 0 and 2
 
         myQueue.enqueue(randomNumber);
     }
 
-  /*  while (myQueue.front != myQueue.rear) 
-    {
-        std::cout << myQueue.queue[myQueue.front] << " ";
-        myQueue.front++;
-    }*/
+    /*  while (myQueue.front != myQueue.rear)
+      {
+          std::cout << myQueue.queue[myQueue.front] << " ";
+          myQueue.front++;
+      }*/
 
     int ran = myQueue.dequeue();
 
     // Adding edges to the graph
     maze.addEdge(0, 0, REGULAR);
-    maze.addEdge(0, 1, myQueue.dequeue());
+    maze.addEdge(0, 1, REGULAR);
     maze.addEdge(0, 2, REGULAR);
     maze.addEdge(0, 3, REGULAR);
     maze.addEdge(0, 4, myQueue.dequeue());
@@ -148,19 +148,32 @@ int main()
     maze.addEdge(18, 4, REGULAR);
     maze.addEdge(18, 9, myQueue.dequeue());
     maze.addEdge(18, 19, REGULAR);
-    maze.addEdge(19, 19, myQueue.dequeue());
-    maze.addEdge(20, 19, REGULAR);
+    maze.addEdge(19, 19, 9);
+    //maze.addEdge(20, 19, 9);
 
-  
+
 
     // Print the adjacency list
     //cout << "Adjacency List:" << endl;
     //maze.printAdjList();
     //cout << endl;
 
+    //maze.printCar();
     //// Print the adjacency grid
-    maze.adjacencyGrid(maze,20);
+   // maze.adjacencyGrid(maze, 20);
+
+
+    /*while (true)
+    {
+       
+        maze.printMaze();
+        char key = _getch();
+        if (key == 'a' || key == 'd' || key == 'w' || key == 's') {
+            maze.moveCar(key);
+        }
+    }*/
+
+    maze.mainMenu();
 
     return 0;
 }
-
