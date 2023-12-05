@@ -84,7 +84,7 @@ public:
 		if (nodePtr)
 		{
 			displayInOrder(nodePtr->left);
-			cout << nodePtr->data <<endl;
+			cout << nodePtr->data << endl;
 			displayInOrder(nodePtr->right);
 		}
 	}
@@ -528,7 +528,7 @@ public:
 		// FOR SELECTION OF OPTIONS
 		if (key == 13 && prime == 1)
 		{
-			
+
 			system("cls");
 			startSound();
 			gameLoop();

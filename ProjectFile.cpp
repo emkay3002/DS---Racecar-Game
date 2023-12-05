@@ -1,10 +1,9 @@
-//Eman_Khalid_22i2409.
-//Abdullah_Jillani_22i2417.
-
 #include <iostream>
 #include "Header.h"
 
 using namespace std;
+
+
 
 
 int main()
@@ -15,8 +14,8 @@ int main()
 
     srand(time(0));
 
-    int numberOfEnqueues = 30;
-    Queue myQueue(31);
+    int numberOfEnqueues = 50;
+    Queue myQueue(51);
 
     for (int i = 0; i < numberOfEnqueues; ++i)
     {
@@ -25,22 +24,22 @@ int main()
         myQueue.enqueue(randomNumber);
     }
 
-    int ran = myQueue.dequeue();
+    //int ran = myQueue.dequeue();
 
 
     maze.addEdge(0, 0, REGULAR);
     maze.addEdge(0, 1, REGULAR);
-    maze.addEdge(0, 2, REGULAR);
+    maze.addEdge(0, 2, myQueue.dequeue());
     maze.addEdge(0, 3, REGULAR);
     maze.addEdge(0, 4, myQueue.dequeue());
     maze.addEdge(0, 5, REGULAR);
     maze.addEdge(0, 6, REGULAR);
-    maze.addEdge(0, 16, REGULAR);
+    maze.addEdge(0, 16, myQueue.dequeue());
     maze.addEdge(1, 1, REGULAR);
     maze.addEdge(1, 6, REGULAR);
     maze.addEdge(1, 16, myQueue.dequeue());
     maze.addEdge(2, 1, REGULAR);
-    maze.addEdge(2, 6, REGULAR);
+    maze.addEdge(2, 6, myQueue.dequeue());
     maze.addEdge(2, 16, REGULAR);
     maze.addEdge(3, 1, myQueue.dequeue());
     maze.addEdge(3, 6, REGULAR);
@@ -50,9 +49,9 @@ int main()
     maze.addEdge(3, 13, REGULAR);
     maze.addEdge(3, 14, myQueue.dequeue());
     maze.addEdge(3, 15, REGULAR);
-    maze.addEdge(3, 16, REGULAR);
+    maze.addEdge(3, 16, myQueue.dequeue());
     maze.addEdge(4, 1, REGULAR);
-    maze.addEdge(4, 6, REGULAR);
+    maze.addEdge(4, 6, myQueue.dequeue());
     maze.addEdge(4, 16, REGULAR);
     maze.addEdge(5, 1, myQueue.dequeue());
     maze.addEdge(5, 6, REGULAR);
@@ -65,9 +64,9 @@ int main()
     maze.addEdge(6, 10, myQueue.dequeue());
     maze.addEdge(6, 11, REGULAR);
     maze.addEdge(6, 12, REGULAR);
-    maze.addEdge(6, 13, REGULAR);
+    maze.addEdge(6, 13, myQueue.dequeue());
     maze.addEdge(6, 14, REGULAR);
-    maze.addEdge(6, 15, REGULAR);
+    maze.addEdge(6, 15, myQueue.dequeue());
     maze.addEdge(6, 16, REGULAR);
     maze.addEdge(7, 1, REGULAR);
     maze.addEdge(7, 2, REGULAR);
@@ -85,22 +84,22 @@ int main()
     maze.addEdge(10, 8, REGULAR);
     maze.addEdge(10, 11, myQueue.dequeue());
     maze.addEdge(10, 12, REGULAR);
-    maze.addEdge(10, 13, REGULAR);
+    maze.addEdge(10, 13, myQueue.dequeue());
     maze.addEdge(10, 14, REGULAR);
     maze.addEdge(10, 15, myQueue.dequeue());
     maze.addEdge(10, 16, REGULAR);
     maze.addEdge(10, 16, REGULAR);
-    maze.addEdge(10, 17, REGULAR);
+    maze.addEdge(10, 17, myQueue.dequeue());
     maze.addEdge(11, 1, REGULAR);
-    maze.addEdge(11, 1, REGULAR);
-    maze.addEdge(11, 8, REGULAR);
+    maze.addEdge(11, 1, myQueue.dequeue());
+    maze.addEdge(11, 8, myQueue.dequeue());
     maze.addEdge(11, 11, REGULAR);
     maze.addEdge(12, 0, REGULAR);
     maze.addEdge(12, 1, REGULAR);
     maze.addEdge(12, 2, myQueue.dequeue());
     maze.addEdge(12, 3, REGULAR);
     maze.addEdge(12, 4, REGULAR);
-    maze.addEdge(12, 5, REGULAR);
+    maze.addEdge(12, 5, myQueue.dequeue());
     maze.addEdge(12, 6, REGULAR);
     maze.addEdge(12, 7, myQueue.dequeue());
     maze.addEdge(12, 8, REGULAR);
@@ -113,9 +112,9 @@ int main()
     maze.addEdge(15, 2, REGULAR);
     maze.addEdge(15, 3, myQueue.dequeue());
     maze.addEdge(15, 4, REGULAR);
-    maze.addEdge(15, 5, REGULAR);
+    maze.addEdge(15, 5, myQueue.dequeue());
     maze.addEdge(15, 6, REGULAR);
-    maze.addEdge(15, 7, REGULAR);
+    maze.addEdge(15, 7, myQueue.dequeue());
     maze.addEdge(15, 8, REGULAR);
     maze.addEdge(15, 9, myQueue.dequeue());
     maze.addEdge(15, 10, REGULAR);
@@ -139,6 +138,7 @@ int main()
     maze.addEdge(18, 19, REGULAR);
     maze.addEdge(19, 19, 9);
     //maze.addEdge(20, 19, 9);
+
 
     maze.mainMenu();
 
